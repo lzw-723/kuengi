@@ -10,4 +10,8 @@ public class SystemInfo {
         return System.getProperty("javafx.version");
     }
 
+    public static String getInfo() {
+        return String.format("Java version: %s\nJavaFX version: %s", javaVersion(), javafxVersion());
+    }
+
 }

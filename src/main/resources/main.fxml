@@ -1,63 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="root" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu mnemonicParsing="false" text="文件">
           <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
+            <MenuItem mnemonicParsing="false" onAction="#openFile" text="打开文件" />
+            <MenuItem mnemonicParsing="false" onAction="#openDir" text="打开目录" />
+            <Menu mnemonicParsing="false" text="最近打开" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
+            <MenuItem mnemonicParsing="false" text="关闭" />
+            <MenuItem mnemonicParsing="false" text="保存" />
+            <MenuItem mnemonicParsing="false" text="另存为" />
+            <MenuItem mnemonicParsing="false" text="恢复" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <MenuItem mnemonicParsing="false" text="偏好设置" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
+            <MenuItem mnemonicParsing="false" onAction="#exit" text="退出" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
+        <Menu mnemonicParsing="false" text="编辑">
           <items>
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
+            <MenuItem mnemonicParsing="false" text="撤回" />
+            <MenuItem mnemonicParsing="false" text="恢复" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
+            <MenuItem mnemonicParsing="false" text="剪切" />
+            <MenuItem mnemonicParsing="false" text="复制" />
+            <MenuItem mnemonicParsing="false" text="粘贴" />
+            <MenuItem mnemonicParsing="false" text="删除" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
+            <MenuItem mnemonicParsing="false" text="全选" />
+            <MenuItem mnemonicParsing="false" text="取消全选" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Help">
+        <Menu mnemonicParsing="false" text="帮助">
           <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+            <MenuItem mnemonicParsing="false" text="关于" />
+                  <MenuItem mnemonicParsing="false" onAction="#showSystemInfo" text="系统信息" />
           </items>
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-      <children>
-        <Label alignment="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
-          <font>
-            <Font size="18.0" />
-          </font>
-        </Label>
-      </children>
-    </AnchorPane>
+      <StackPane fx:id="body" prefHeight="400.0" prefWidth="640.0">
+         <children>
+            <ScrollPane hbarPolicy="NEVER">
+               <content>
+                  <VBox alignment="TOP_CENTER" fillWidth="false" prefWidth="640.0">
+                     <children>
+                        <TextField promptText="输入标题搜索" />
+                        <GridPane fx:id="bookshelf" prefWidth="640.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="128.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="128.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints prefHeight="190.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="190.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="190.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <Hyperlink fx:id="link" onAction="#openFile" text="点击选择或拖动文件到此处" textFill="#9f9f9fb0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Hyperlink>
+            <ListView fx:id="contents" prefWidth="200.0" visible="false" />
+         </children>
+      </StackPane>
   </children>
 </VBox>
