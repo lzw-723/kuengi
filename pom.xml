@@ -21,12 +21,12 @@
         <dependency>
             <groupId>com.github.lzw-723.element-fx</groupId>
             <artifactId>element-lite</artifactId>
-            <version>aaedcb8406</version>
+            <version>44610a690f</version>
         </dependency>
         <dependency>
             <groupId>com.github.lzw-723</groupId>
             <artifactId>epubime</artifactId>
-            <version>f40fbc16e1</version>
+            <version>baf26d4185</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
