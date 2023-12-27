@@ -1,17 +1,14 @@
 package fun.lzwi.util;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.html.HTMLDocument;
-import org.w3c.dom.html.HTMLScriptElement;
-
 import fun.lzwi.epubime.BytesResourceReader;
 import fun.lzwi.epubime.Resource;
 import fun.lzwi.epubime.StringResourceReader;
@@ -81,39 +78,59 @@ public class PageUtils {
             document.getDocumentElement().appendChild(head);
         }
         // <style>
-        Element style = document.createElement("style");
-        style.setTextContent(ResUtils.readString("css/book-style.css"));
+        Element style = document.createElement("link");
+        // style.setTextContent(ResUtils.readString("css/book-style.css"));
+        style.setAttribute("href", ResUtils.getResourceURL("css/pure.min.css"));
+        style.setAttribute("rel", "stylesheet");
         head.appendChild(style);
 
         // <link href="https://cdn.bootcdn.net/ajax/libs/pure/3.0.0/pure.min.css"
         // rel="stylesheet">
         Element pure = document.createElement("link");
-        pure.setAttribute("href", "https://cdn.bootcdn.net/ajax/libs/pure/3.0.0/pure.min.css");
+        pure.setAttribute("href", ResUtils.getResourceURL("css/pure.min.css"));
         pure.setAttribute("rel", "stylesheet");
         head.appendChild(pure);
         // <link href="https://cdn.bootcdn.net/ajax/libs/heti/0.9.4/heti.min.css"
         // rel="stylesheet">
         Element heti = document.createElement("link");
-        heti.setAttribute("href", "https://cdn.bootcdn.net/ajax/libs/heti/0.9.4/heti.min.css");
+        heti.setAttribute("href", ResUtils.getResourceURL("css/heti.min.css"));
         heti.setAttribute("rel", "stylesheet");
         head.appendChild(heti);
         // <script defer
         // src="https://cdn.bootcdn.net/ajax/libs/alpinejs/3.13.0/cdn.min.js"></script>
         Element alpine = document.createElement("script");
-        alpine.setAttribute("src", "https://cdn.bootcdn.net/ajax/libs/alpinejs/3.13.0/cdn.min.js");
+        alpine.setAttribute("src", ResUtils.getResourceURL("js/alpine.min.js"));
         alpine.setAttribute("defer", null);
         head.appendChild(alpine);
         // <script
         // src="https://cdn.bootcdn.net/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
         Element zepto = document.createElement("script");
-        zepto.setAttribute("src", "https://cdn.bootcdn.net/ajax/libs/zepto/1.2.0/zepto.min.js");
+        zepto.setAttribute("src", ResUtils.getResourceURL("js/zepto.min.js"));
         head.appendChild(zepto);
         // <script>
-        Element script = ((HTMLDocument) document).createElement("script");
-        String sc = ResUtils.readString("js/book-script.js");
-        ((HTMLScriptElement) script).setSrc(ResUtils.getResourceURL("js/book-script.js"));
-        head.appendChild(script);
+        // Element script = ((HTMLDocument) document).createElement("script");
+        // String sc = ResUtils.readString("js/book-script.js");
+        // ((HTMLScriptElement)
+        // script).setSrc(ResUtils.getResourceURL("js/book-script.js"));
+        // head.appendChild(script);
 
         System.out.println("injected");
     }
+
+    public static String getBody(String html) {
+        // String html = "<html><head><title>Test</title></head><body><p>This is a test.</p></body></html>";
+
+        String bodyContent = "";
+
+        Pattern pattern = Pattern.compile("<body>(.*?)</body>", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(html);
+
+        if (matcher.find()) {
+            bodyContent = matcher.group(1);
+        }
+
+        System.out.println(bodyContent); // Prints: <p>This is a test.</p>
+        return bodyContent;
+    }
+
 }

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Demo</title>
+    <link rel="stylesheet" href="./css/pure.min.css">
+    <link rel="stylesheet" href="./css/heti.min.css">
+    <link rel="stylesheet" href="./css/book-style.css">
+    <script defer src="./js/alpine.min.js"></script>
+    <script src="./js/zepto.min.js"></script>
+    <script src="./js/book-script.js"></script>
+    <style>
+        article {
+            transition-property: all;
+            transition-duration: 0.3s;
+            transition-delay: 0.1s;
+            transition-timing-function: ease-in-out;
+        }
+    </style>
+</head>
+
+<body x-data="{content: '',
+    article_style: {
+        font_size: 16,
+        margin: 5,
+        line_height: 1.6,
+        font_family: 'LXGW WenKai Mono',
+    }}">
+    <div x-data="{ open: false }">
+        <button class="pure-button" @click="open = ! open">设置</button>
+
+        <template x-if="open" @click="open = false">
+
+            <div>
+
+                <button class="pure-button" x-on:click="kuengi.log('test')">测试</button>
+                <button class="pure-button" x-on:click="klog('test')">测试</button>
+                <button class="pure-button" x-on:click="insertDemo">填入测试内容</button>
+                <br>
+                <span>A:
+                    <button class="pure-button" x-on:click="article_style.font_size-=1">-</button>
+                    <span x-text="article_style.font_size.toFixed(0)"></span>
+                    <button class="pure-button" x-on:click="article_style.font_size+=1">+</button>
+                </span>
+                <br>
+                <span>边距:
+                    <button class="pure-button" x-on:click="article_style.margin-=0.2">-</button>
+                    <span x-text="article_style.margin.toFixed(1) + 'rem'"></span>
+                    <button class="pure-button" x-on:click="article_style.margin+=0.2">+</button>
+                </span>
+                <br>
+                <span>行距:
+                    <button class="pure-button" x-on:click="article_style.line_height-=0.1">-</button>
+                    <span x-text="article_style.line_height.toFixed(1) + 'em'"></span>
+                    <button class="pure-button" x-on:click="article_style.line_height+=0.1">+</button>
+                </span>
+                <br>
+                <span>字体:
+                    <button class="pure-button" x-on:click="article_style.font_family='MiSans'">MiSans</button>
+                    <button class="pure-button" x-on:click="article_style.font_family='LXGW WenKai Mono'">LXGW WenKai
+                </span>
+            </div>
+        </template>
+    </div>
+    <button class="pure-button" x-on:click="a++" x-data="{ a: 0}" x-text="a"></button>
+    <article x-bind:style="{
+        'margin-left': article_style.margin + 'rem',
+        'font-size': article_style.font_size + 'px',
+        'margin-right': article_style.margin + 'rem',
+        'line-height': article_style.line_height + 'em',
+        'font-family': article_style.font_family,
+    }" class="heti" x-html="_content.v">
+    </article>
+</body>
+
+</html>

@@ -9,9 +9,8 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import javafx.concurrent.Worker;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import fun.lzwi.bean.Book;
@@ -21,7 +20,6 @@ import fun.lzwi.epubime.EpubReader;
 import fun.lzwi.epubime.Resource;
 import fun.lzwi.epubime.StringResourceReader;
 import fun.lzwi.epubime.document.NCX;
-import fun.lzwi.epubime.util.XmlUtils;
 import fun.lzwi.manager.SceneManager;
 import fun.lzwi.util.PageUtils;
 import fun.lzwi.util.ResUtils;
@@ -49,9 +47,6 @@ public class ViewController {
 
     private Book book;
 
-    private Document injected = null;
-    private long time = 0L;
-
     private Resource res;
 
     public ViewController(Book book) {
@@ -75,6 +70,10 @@ public class ViewController {
             return p.getNavLabel();
         }).collect(Collectors.toList());
 
+        webView.getEngine().onErrorProperty().addListener((ov, o, n) -> {
+            System.out.println(n);
+        });
+        webView.getEngine().loadContent(ResUtils.readHtml("book.html"));
         loadIndex(contents);
 
         Resource resource = new Resource(new EpubFile(new File(book.getFile())));
@@ -85,7 +84,10 @@ public class ViewController {
                 StringResourceReader reader = new StringResourceReader();
                 Resource html = new Resource(resource, content);
                 String text = reader.read(html);
-                webView.getEngine().loadContent(text);
+                // webView.getEngine().loadContent(text);
+                // JSObject window = (JSObject)
+                webView.getEngine().executeScript(String.format("book.load('%s');",
+                PageUtils.getBody(text)));
                 System.out.println("加载html - " + html.getHref());
                 res = html;
             } catch (IOException e) {
@@ -95,21 +97,29 @@ public class ViewController {
         listView.getSelectionModel().selectFirst();
         webView.getEngine().documentProperty()
                 .addListener((ChangeListener<Document>) (observable, oldValue, newValue) -> {
-                    // if (newValue != null && (System.currentTimeMillis() - time > 500)) {
-                    System.out.println("change - " + newValue + " - " + oldValue);
-                    time = System.currentTimeMillis();
-                    JSObject window = (JSObject) webView.getEngine().executeScript("window");
-                    window.setMember("kuengi", new WebUtils());
-                    webView.getEngine().executeScript("kuengi.log(\"hello\")");
                     if (newValue != null) {
-                        PageUtils.processViewport(newValue);
-                        PageUtils.processCSS(newValue, res);
-                        PageUtils.processImg(newValue, res);
-                        PageUtils.inject(newValue);
+                        // PageUtils.processCSS(newValue, res);
+                        // PageUtils.processImg(newValue, res);
+                        // PageUtils.inject(newValue);
+                        // webView.getEngine().reload();
 
                     }
-                    ResUtils.writeString(newValue);
                 });
+
+        webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == Worker.State.SUCCEEDED) {
+                JSObject window = (JSObject) webView.getEngine().executeScript("window");
+                window.setMember("kuengi", new WebUtils());
+                System.out.println("inject");
+                // webView.getEngine().executeScript("inject();");
+                // webView.getEngine()
+                //         .executeScript("window.onload();");
+                // window.getMember("book");
+                // webView.getEngine()
+                //         .executeScript(String.format("book.load('%s');", "text"));
+
+            }
+        });
     }
 
     private void loadIndex(List<String> contents) {
