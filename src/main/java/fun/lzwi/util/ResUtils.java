@@ -79,7 +79,7 @@ public class ResUtils {
         html = html.replace("./css/book-style.css", ResUtils.getResourceURL("css/book-style.css"));
         html = html.replace("./js/alpine.min.js", ResUtils.getResourceURL("js/alpine.min.js"));
         html = html.replace("./js/zepto.min.js", ResUtils.getResourceURL("js/zepto.min.js"));
-        html = html.replace("./js/eruda.min.js", ResUtils.getResourceURL("js/eruda.min.js"));
+        // html = html.replace("./js/eruda.min.js", ResUtils.getResourceURL("js/eruda.min.js"));
         html = html.replace("./js/book-script.js", ResUtils.getResourceURL("js/book-script.js"));
         return html;
     }

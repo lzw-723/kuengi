@@ -1,5 +1,6 @@
 package fun.lzwi.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 
@@ -37,10 +38,11 @@ public class BookItemController {
     private void initLayout() throws IOException {
         title.setText(book.getTitle());
         author.setText(book.getAuthor());
+        if (book.getImage() != null) {
+            img.setImage(new Image(new ByteArrayInputStream(book.getImage())));
+            return;
+        }
         URL noImage = App.class.getClassLoader().getResource("img/image_no.png");
-        // EpubFile epubFile = new EpubFile(book.getFile());
-        // Resource resource = new Resource(epubFile);
-        // resource.setHref(book.getImage());
         img.setImage(new Image(noImage.openStream()));
     }
 

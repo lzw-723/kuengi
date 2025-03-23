@@ -6,15 +6,15 @@ import java.util.zip.ZipException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import fun.lzwi.epubime.epub.EpubBook;
+import fun.lzwi.epubime.epub.EpubParseException;
+import fun.lzwi.epubime.epub.EpubParser;
+import fun.lzwi.epubime.epub.Metadata;
 import org.xml.sax.SAXException;
 
 import fun.lzwi.App;
 import fun.lzwi.SystemInfo;
 import fun.lzwi.bean.Book;
-import fun.lzwi.epubime.Epub;
-import fun.lzwi.epubime.EpubFile;
-import fun.lzwi.epubime.EpubReader;
-import fun.lzwi.epubime.document.section.MetaData;
 import fun.lzwi.service.BookshelfService;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -101,7 +101,7 @@ public class MainController {
         return null;
     }
 
-    public void openFile() throws ZipException, IOException, ParserConfigurationException, SAXException {
+    public void openFile() throws ZipException, IOException, ParserConfigurationException, SAXException, EpubParseException {
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().add(new ExtensionFilter("epub文件", "*.epub"));
         File file = chooser.showOpenDialog(contents.getScene().getWindow());
@@ -110,7 +110,7 @@ public class MainController {
         }
     }
 
-    public void openDir() throws IOException, ParserConfigurationException, SAXException {
+    public void openDir() throws IOException, ParserConfigurationException, SAXException, EpubParseException {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("选择epub文件夹");
         File file = chooser.showDialog(contents.getScene().getWindow());
@@ -124,23 +124,15 @@ public class MainController {
         }
     }
 
-    public void read(File file) throws IOException, ParserConfigurationException, SAXException {
-        EpubReader reader = new EpubReader(new EpubFile(file));
-        Epub epub = reader.read();
-        MetaData metaData = epub.getPackageDocument().getMetaData();
+    public void read(File file) throws IOException, ParserConfigurationException, SAXException, EpubParseException {
+        EpubParser parser = new EpubParser(file);
+        EpubBook epub = parser.parse();
+        Metadata metaData = epub.getMetadata();
         Book book = new Book();
         book.setFile(file.getPath());
-        // String cover = metaData.getCoverages().get(0);
-        // metaData
-        // book.setImage(cover);
-        String cover = metaData.getMeta().get("cover");
-        epub.getPackageDocument().getManifest().getItems().stream().filter(item -> item.getId().equals(cover))
-                .findFirst().ifPresent(item -> {
-                    book.setImage(item.getHref());
-                    System.out.println(item.getHref());
-                });
-        book.setTitle(metaData.getDc().getTitles().get(0));
-        book.setAuthor(metaData.getDc().getCreators().get(0));
+        book.setImage(epub.getCover().getData());
+        book.setTitle(metaData.getTitle());
+        book.setAuthor(metaData.getContributor());
         // book.setImage(metaData.getCoverages().get(0));
         BookshelfService.getInstance().add(book);
         loadBookshelf();

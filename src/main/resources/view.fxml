@@ -16,9 +16,9 @@
                <children>
                   <ButtonBar>
                      <buttons>
-                        <Button mnemonicParsing="false" text="Button" />
-                        <Button mnemonicParsing="false" onAction="#quit" text="退出" />
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button fx:id="button1" mnemonicParsing="false" text="退出" />
+                        <Button fx:id="button2" mnemonicParsing="false" text="Button" />
+                        <Button fx:id="button3" mnemonicParsing="false" text="隐藏" />
                      </buttons>
                   </ButtonBar>
                   <ListView fx:id="listView" prefHeight="200.0" prefWidth="400.0" VBox.vgrow="ALWAYS" />

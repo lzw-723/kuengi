@@ -6,7 +6,16 @@ public class Book {
     private String description;
     private String file;
     private String type;
-    private String image;
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    private byte[] image;
     private String category;
     private String status;
 
@@ -80,19 +89,6 @@ public class Book {
         this.type = type;
     }
 
-    /**
-     * @return the image
-     */
-    public String getImage() {
-        return image;
-    }
-
-    /**
-     * @param image the image to set
-     */
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     /**
      * @return the category
